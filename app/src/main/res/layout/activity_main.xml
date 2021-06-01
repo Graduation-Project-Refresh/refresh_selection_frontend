@@ -6,58 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="463dp"
-        android:layout_height="886dp"
-        android:background="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+<!--    <View-->
+<!--        android:id="@+id/view"-->
+<!--        android:layout_width="463dp"-->
+<!--        android:layout_height="886dp"-->
+<!--        android:background="#FFFFFF"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/toolbar" />-->
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#E2F0D9"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-2dp" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="399dp"
-        android:layout_height="350dp"
-        android:layout_marginTop="204dp"
-        android:background="#E2F0D9"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/toolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#E2F0D9"-->
+<!--        android:minHeight="?attr/actionBarSize"-->
+<!--        android:theme="?attr/actionBarTheme"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:layout_editor_absoluteX="-6dp" />-->
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="22dp"
-        android:text="시간대 별 걸음 수"
-        android:textColor="#1C0101"
-        android:textColorHint="#252525"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/toolbar2"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/toolbar2"-->
+<!--        android:layout_width="399dp"-->
+<!--        android:layout_height="350dp"-->
+<!--        android:layout_marginTop="204dp"-->
+<!--        android:background="#E2F0D9"-->
+<!--        android:minHeight="?attr/actionBarSize"-->
+<!--        android:theme="?attr/actionBarTheme"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--    />-->
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginBottom="20dp"
-        android:text="평균 걸음 속도"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/view" />
+
+
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -72,6 +53,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -79,75 +61,115 @@
             tools:visibility="visible">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="20dp"
-                android:text="기기 이름:"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF"
-                android:textSize="24sp" />
+                android:layout_marginStart="70dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginBottom="27dp"
+                android:textColor="@color/white"
+                android:text="distnace"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintStart_toStartOf="@+id/view"
+                 />
+
+            <TextView
+                android:id="@+id/real_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/white"
+                android:text="갖고온 걸음수"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintStart_toStartOf="@+id/view"
+                 />
 
             <TextView
                 android:id="@+id/deviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginLeft="70dp"
                 android:layout_marginTop="20dp"
-                android:text="TextView"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="20dp"
-                android:editable="true"
-                android:text="Address"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+                android:textColor="@color/white"
+                android:text="기기이름"
+                android:textSize="24sp"
+                 />
 
             <TextView
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginLeft="70dp"
                 android:layout_marginTop="20dp"
-                android:text="TextView"
-                android:textSize="24sp" />
+                android:textColor="@color/white"
+                android:text="mac 주소"
+                android:textSize="24sp"
+                 />
+            <TextView
+                android:id="@+id/recommend_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/white"
+                android:text="추천 걸음수"
+                android:textSize="24sp"
+                />
+
+            <Button
+                android:id="@+id/pairBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="pairing"
+                android:backgroundTint="@color/colorAccent"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="@id/linearlayout"
+                app:layout_constraintTop_toBottomOf="@id/recommend_step"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="300dp" />
+
+            <Button
+                android:id="@+id/showBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="show"
+                android:backgroundTint="@color/colorAccent"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@id/pairBt"
+                app:layout_constraintTop_toBottomOf="@id/recommend_step"
+                android:layout_marginBottom="90dp"
+                android:layout_marginLeft="200dp" />
 
         </LinearLayout>
     </ScrollView>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintGuide_begin="20dp" />-->
 
-    <Button
-        android:id="@+id/pairBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
-        android:layout_marginEnd="24dp"
-        android:text="pairing"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="129dp"
         android:layout_height="140dp"
-        android:layout_marginStart="132dp"
+        android:layout_marginRight="132dp"
         android:layout_marginTop="64dp"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="132dp" />
 
     <Button
         android:id="@+id/scan"
@@ -156,8 +178,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="44dp"
         android:text="SCAN"
+        android:backgroundTint="@color/colorAccent"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/progressBar"
-        app:layout_constraintTop_toTopOf="@+id/progressBar" />
+        app:layout_constraintTop_toTopOf="@+id/progressBar"
+        android:layout_marginLeft="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

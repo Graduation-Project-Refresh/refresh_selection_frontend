@@ -4,26 +4,27 @@ import android.Manifest
 import android.bluetooth.*
 import android.content.*
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import kotlinx.android.synthetic.main.activity_main.*
+import java.io.*
 import java.util.*
 
 
 private const val SCAN_PERIOD: Long = 10000
 private val TAG = BluetoothLeService::class.java.simpleName
 
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 class MainActivity : AppCompatActivity(){
     private val REQUEST_ENABLE_BT = 3
     private var leDeviceListAdapter: LeDeviceListAdapter? = null
@@ -35,6 +36,11 @@ class MainActivity : AppCompatActivity(){
     private var isBindedService = false
     private var setServiceNotification: List<UUID>? = null;
 
+    ////은바니
+    private val COL_DATE: Int = 0
+    private val COL_TIME = 1
+    private val COL_STEPS = 2
+////
     private fun PackageManager.missingSystemFeature(name: String): Boolean = !hasSystemFeature(name)
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -46,6 +52,7 @@ class MainActivity : AppCompatActivity(){
 
     private var mBtn: Button? = null
     private var scanBtn: Button? = null
+    private var showBt:Button?=null
 
     override fun onResume() {
         super.onResume()
@@ -59,6 +66,7 @@ class MainActivity : AppCompatActivity(){
     /**
      * 앱 시작 시 실행
      */
+    @RequiresApi(Build.VERSION_CODES.ECLAIR)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,6 +76,7 @@ class MainActivity : AppCompatActivity(){
         handler = Handler()
         mBtn = findViewById<Button>(R.id.pairBt)
         scanBtn = findViewById<Button>(R.id.scan)
+        showBt=findViewById<Button>(R.id.showBt)
         leDeviceListAdapter = LeDeviceListAdapter()
 
         packageManager.takeIf { it.missingSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) }?.also {
@@ -103,11 +112,15 @@ class MainActivity : AppCompatActivity(){
 
         //paring 버튼 이벤트. 페어링을 시작함.
         mBtn!!.setOnClickListener {
-            mBtn?.visibility = View.GONE
-            findViewById<View>(R.id.scrollView).visibility = View.GONE
+//            mBtn?.visibility = View.GONE
+//            findViewById<View>(R.id.scrollView).visibility = View.GONE
             mibandDevice?.name?.let { it1 -> Log.d("mibandDevice", it1) }
             val gattServiceIntent = Intent(this, BluetoothLeService::class.java)
-            isBindedService = bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            isBindedService = bindService(
+                gattServiceIntent,
+                mServiceConnection,
+                Context.BIND_AUTO_CREATE
+            )
         }
 
         //scan button event. 디바이스를 못 찾을 경우 나타나는 버튼으로 클릭 시 다시 스캔을 시작
@@ -116,11 +129,64 @@ class MainActivity : AppCompatActivity(){
             scanBtn?.visibility = View.INVISIBLE
             scanLeDevice(true)
         }
+
+        showBt!!.setOnClickListener {
+            //설문조사가 잘 저장됨
+            val nextIntent = Intent(this, ModelClient::class.java)
+            startActivity(nextIntent)
+            //설문조사 저장후 메인으로 넘어감
+
+        }
+//        //추천 걸음수
+//        try {
+//            val manager = assets
+//            val `in`: InputStream = manager.open("test.csv")
+//            val cooked: ArrayList<Data> = parse(`in`)!!
+//            var all_steps = ""
+//            if (cooked != null) {
+//                for (piece in cooked) {
+//                    all_steps += piece.steps.toString() + " "
+//                }
+//            }
+//            println(all_steps)
+//            val all_steps_strArr = all_steps.split(" ").toTypedArray()
+//            val all_steps_intArr =
+//                Arrays.stream(all_steps_strArr).mapToInt(Integer::parseInt).toArray()
+//            println(all_steps_intArr)
+//        } catch (e: FileNotFoundException) {
+//            e.printStackTrace()
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+
     }
 
+//    //은바니 csv 읽는 메소드
+//    @Throws(IOException::class)
+//    private fun parse(`in`: InputStream): ArrayList<Data>? {
+//        val results = ArrayList<Data>()
+//        val reader = BufferedReader(InputStreamReader(`in`))
+//        var nextLine: String = reader.readLine()
+//        while (reader.readLine().also({ nextLine = it }) != null) {
+//            val tokens = nextLine.split(",").toTypedArray()
+//            if (tokens.size != 3) {
+//                Log.w("CSVParser", "Skipping Bad CSV Row")
+//                continue
+//            }
+//            //Add new parsed result
+//            val current = Data()
+//            current.date = tokens[COL_DATE]
+//            current.time = tokens[COL_TIME]
+//            current.steps = tokens[COL_STEPS]
+//            results.add(current)
+//        }
+//        `in`.close()
+//        return results
+//    }
     /**
      * 미밴드 디바이스 정보를 뷰에 나타냄
      */
+    @RequiresApi(Build.VERSION_CODES.ECLAIR)
     fun setMibandDeviceInfoView() {
         val textView: TextView = findViewById<TextView>(R.id.deviceName)
         val textView2: TextView = findViewById<TextView>(R.id.address)
@@ -128,6 +194,8 @@ class MainActivity : AppCompatActivity(){
         scanBtn?.visibility = View.INVISIBLE
         findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
         mBtn?.visibility = View.VISIBLE
+//        textView.append(": "+mibandDevice!!.name)
+//        textView2.append(": "+mibandDevice!!.address)
         textView.text = mibandDevice!!.name
         textView2.text = mibandDevice!!.address
     }
@@ -137,20 +205,32 @@ class MainActivity : AppCompatActivity(){
      */
     fun getBluetoothPermissions() {
         val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-        val permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
-        val permission3 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val permission4 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val permission2 = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.BLUETOOTH_ADMIN
+        )
+        val permission3 = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        val permission4 = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if (permission1 != PackageManager.PERMISSION_GRANTED
                 || permission2 != PackageManager.PERMISSION_GRANTED
                 || permission3 != PackageManager.PERMISSION_GRANTED
                 || permission4 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(
-                            Manifest.permission.BLUETOOTH,
-                            Manifest.permission.BLUETOOTH_ADMIN,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION),
-                    642)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                642
+            )
         } else {
             Log.d("DISCOVERING-PERMISSIONS", "Permissions Granted")
         }
@@ -158,6 +238,7 @@ class MainActivity : AppCompatActivity(){
 
     private val mServiceConnection = object : ServiceConnection {
 
+        @RequiresApi(Build.VERSION_CODES.ECLAIR)
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             bluetoothLeService = (service as BluetoothLeService.LocalBinder).service
             if (!bluetoothLeService!!.initialize()) {
@@ -175,6 +256,7 @@ class MainActivity : AppCompatActivity(){
     /**
      * BluetoothLeService 에서 날린 브로드캐스트를 여기서 받음.
      */
+    val b = BluetoothLeService()
     private val mGattUpdateReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -189,9 +271,46 @@ class MainActivity : AppCompatActivity(){
                     invalidateOptionsMenu()
                 }
                 ACTION_DATA_AVAILABLE -> {
+                    //데이터를 받을때
+                    val real_step: TextView = findViewById<TextView>(R.id.real_step)
+                    val distance: TextView = findViewById<TextView>(R.id.distance)
+                    val recommend_step:TextView= findViewById<TextView>(R.id.recommend_step)
+
+                    if (intent.hasExtra("totalSteps")) {
+//                        real_step.append(" "+intent.getIntExtra("totalSteps", 1).toString())
+                        real_step.text = "실시간 걸음수 : "+intent.getIntExtra("totalSteps", 1).toString()
+                    } else {
+                        Log.d("data_get", "real_step error")
+                    }
+                    if (intent.hasExtra("distance")) {
+//                        distance.append(" "+intent.getIntExtra("distance", 1).toString())
+                        distance.text = "총 거리 : "+intent.getIntExtra("distance", 1).toString()
+                    } else {
+                        Log.d("data_get", "distance error")
+                    }
+
+//                    recommend_step.text = "추천 걸음수 : "+b.sum_step/15
+//                    Log.d("b.sum_step",b.sum_step.toString())
+//                    if (intent.hasExtra("recommend_step")) {
+////                        distance.append(" "+intent.getIntExtra("distance", 1).toString())
+//                        recommend_step.text = "추천 걸음수 : "+intent.getIntExtra("recommend_step",1).toString()
+//                    } else {
+//                        Log.d("data_get", "recommend_step error")
+//                    }
+                }
+                ACTIVITY_DATA_FETCH->{
+//                    val recommend_step:TextView= findViewById<TextView>(R.id.recommend_step)
+//                    recommend_step.text = "추천 걸음수 : "+intent.getIntExtra("recommend_step",1).toString()
+//                    recommend_step.text = "추천 걸음수 : "+b.sum_step/15
+                    //Log.d("b.sum_step",b.sum_step.toString())
+                }
+                ACTIVITY_DATA_SEND_OVER->{//intent action이 이거 일때
+                    val recommend_step:TextView= findViewById<TextView>(R.id.recommend_step)
+                    recommend_step.text = "추천 걸음수 : "+intent.getIntExtra("recommend_step",1).toString()
+                    Log.d("data_get","마지막 추천 걸음수");
                 }
                 ACTION_GATT_SERVICES_DISCOVERED -> {
-
+                    //서비스 발견했을때
                 }
             }
         }
@@ -200,6 +319,7 @@ class MainActivity : AppCompatActivity(){
     /**
      * 디바이스 스캔시 콜백
      */
+    @RequiresApi(Build.VERSION_CODES.ECLAIR)
     private val leScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
         runOnUiThread {
             if( mScanning ) {
@@ -216,6 +336,7 @@ class MainActivity : AppCompatActivity(){
     /**
      * 블루투스 디바이스 스캔
      */
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private fun scanLeDevice(enable: Boolean) {
         when (enable) {
             true -> {
@@ -223,7 +344,7 @@ class MainActivity : AppCompatActivity(){
                 handler?.postDelayed({
                     mScanning = false
                     bluetoothAdapter?.stopLeScan(leScanCallback)
-                    if(mibandDevice==null) {
+                    if (mibandDevice == null) {
                         scanBtn?.visibility = View.VISIBLE
                         findViewById<ProgressBar>(R.id.progressBar).visibility = View.INVISIBLE
                     }
@@ -247,6 +368,7 @@ class MainActivity : AppCompatActivity(){
         /**
          * 디바이스 이름이 Mi band인 디바이스를 찾아 mLeDevices 리스트에 집어넣음.
          */
+        @RequiresApi(Build.VERSION_CODES.ECLAIR)
         fun addDevice(device: BluetoothDevice) {
             if (!mLeDevices.contains(device)) {
                 if(device!=null){
@@ -297,6 +419,7 @@ class MainActivity : AppCompatActivity(){
             intentFilter.addAction(ACTION_GATT_SERVICES_DISCOVERED)
             intentFilter.addAction(ACTION_DATA_AVAILABLE)
             intentFilter.addAction(ACTIVITY_DATA_FETCH)
+            intentFilter.addAction(ACTIVITY_DATA_SEND_OVER)
             return intentFilter
         }
     }

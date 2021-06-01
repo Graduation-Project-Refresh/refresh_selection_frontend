@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginActivity">
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.refresh_selection.LoginActivity"
+        android:label="login"
+        tools:layout="@layout/login" >
+        <action
+            android:id="@+id/action_loginActivity_to_registerJoin3"
+            app:destination="@id/registerJoin"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+    </activity>
+    <activity
+        android:id="@+id/registerJoin"
+        android:name="com.example.refresh_selection.RegisterJoin"
+        android:label="join"
+        tools:layout="@layout/join" >
+        <action
+            android:id="@+id/action_registerJoin_to_mainActivity4"
+            app:destination="@id/mainActivity"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+    </activity>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.refresh_selection.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+</navigation>
